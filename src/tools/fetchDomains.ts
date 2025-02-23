@@ -3,7 +3,7 @@ import { XMLParser } from 'fast-xml-parser'
 
 export const fetchGodaddyDomains = async () => {
   const res = await fetch(
-    'https://api.godaddy.com/v1/domains?limit=1000&offset=0&sort=expiration',
+    `${process.env.GODADDY_URL}?limit=1000&offset=0&sort=expiration`,
     {
       headers: {
         Authorization: `sso-key ${process.env.GODADDY_API_KEY}:${process.env.GODADDY_API_SECRET}`,
@@ -54,7 +54,7 @@ export const fetchNamecheapDomains = async () => {
     textNodeName: 'value'
   })
   while (page <= totalPages) {
-    const url = `https://api.namecheap.com/xml.response?ApiUser=${apiUser}&ApiKey=${apiKey}&UserName=${username}&ClientIp=${clientIp}&Command=namecheap.domains.getList&Page=${page}&PageSize=100`
+    const url = `${process.env.NAMECHEAP_URL}?ApiUser=${apiUser}&ApiKey=${apiKey}&UserName=${username}&ClientIp=${clientIp}&Command=namecheap.domains.getList&Page=${page}&PageSize=100`
 
     const res = await fetch(url, {
       method: 'GET',
@@ -74,7 +74,6 @@ export const fetchNamecheapDomains = async () => {
     const json = parser.parse(xmlText)
     const domains =
       json.ApiResponse.CommandResponse.DomainGetListResult.Domain || []
-    // const domains = json.ApiResponse.CommandResponse.DomainGetListResult
     allDomains = [...allDomains, ...domains]
 
     // Update total pages based on the response

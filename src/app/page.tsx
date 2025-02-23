@@ -1,43 +1,23 @@
 import {
   fetchGodaddyDomains,
   fetchNamecheapDomains
-} from '@/actions/fetchDomains'
+} from '@/tools/fetchDomains'
 import { TDomain } from './type'
+import { formatDate, sortDomains } from '@/tools/helpers'
 
 export default async function Home() {
   const goDaddyDomains = await fetchGodaddyDomains()
   const namecheapDomains = await fetchNamecheapDomains()
-
-  const sortedDomains = [...goDaddyDomains, ...namecheapDomains].sort(
-    (a: TDomain, b: TDomain) => {
-      const dateA = a.expires
-        ? new Date(a.expires).getTime()
-        : a.Expires
-        ? new Date(a.Expires).getTime()
-        : 0
-      const dateB = b.expires
-        ? new Date(b.expires).getTime()
-        : b.Expires
-        ? new Date(b.Expires).getTime()
-        : 0
-
-      return dateA - dateB
-    }
-  )
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date
-      .toLocaleDateString('en-US', {
-        month: 'short',
-        day: '2-digit',
-        year: 'numeric'
-      })
-      .replace(',', '')
-  }
+  const sortedDomains = sortDomains([...goDaddyDomains, ...namecheapDomains])
 
   return (
     <main>
+      <div
+        className="flex justify-center items-center h-20 bg-slate-300
+        text-white text-5xl font-bold"
+      >
+        <h1>Domains Monitoring App</h1>
+      </div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg max-w-7xl mx-auto">
         <h1 className="m-4 font-bold text-3xl">
           Total Domains : {sortedDomains.length}
@@ -81,9 +61,9 @@ export default async function Home() {
                 </div>
               </th>
 
-              <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-6 py-3">
                 <span className="sr-only">Edit</span>
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -108,14 +88,14 @@ export default async function Home() {
                     {formatDate(expirationDate)}
                   </td>
                   <td className={`px-6 py-4 ${textColor}`}>{registrar}</td>
-                  <td className={`px-6 py-4 text-right ${textColor}`}>
+                  {/* <td className={`px-6 py-4 text-right ${textColor}`}>
                     <a
                       href="#"
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       Edit
                     </a>
-                  </td>
+                  </td> */}
                 </tr>
               )
             })}
