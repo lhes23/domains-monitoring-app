@@ -54,7 +54,7 @@ export const fetchNamecheapDomains = async () => {
     textNodeName: 'value'
   })
   while (page <= totalPages) {
-    const url = `${process.env.NAMECHEAP_URL}?ApiUser=${apiUser}&ApiKey=${apiKey}&UserName=${username}&ClientIp=${clientIp}&Command=namecheap.domains.getList&Page=${page}&PageSize=100`
+    const url = `${process.env.AWS_EC2_PROXY_URL}?ApiUser=${apiUser}&ApiKey=${apiKey}&UserName=${username}&ClientIp=${clientIp}&Command=namecheap.domains.getList&Page=${page}&PageSize=100`
 
     const res = await fetch(url, {
       method: 'GET',
